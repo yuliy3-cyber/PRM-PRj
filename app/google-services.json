@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "446508210713",
+    "firebase_url": "https://cinemabooking-7fa2c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cinemabooking-7fa2c",
+    "storage_bucket": "cinemabooking-7fa2c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446508210713:android:21878acc2020eb78a7e888",
+        "android_client_info": {
+          "package_name": "com.example.movieticketapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3yIfA0dwgGuWAHOzSXDwM2NeSqslGN0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
