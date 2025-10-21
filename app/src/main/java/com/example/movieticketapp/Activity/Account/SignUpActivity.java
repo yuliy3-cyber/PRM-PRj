@@ -182,7 +182,6 @@ public class SignUpActivity extends AppCompatActivity {
         };
     }
 
-    // ✅ Hàm tạo tài khoản có check admin
     void CreateUser(String email, String password, String Name, @Nullable String url) {
         String urlAvatar;
         if (url == null) {
@@ -197,7 +196,6 @@ public class SignUpActivity extends AppCompatActivity {
                         FirebaseUser user = FirebaseRequest.mAuth.getCurrentUser();
                         UpdatePhotho(urlAvatar);
 
-                        // ✅ Nếu email là admin -> set quyền admin
                         String accountType = email.equals("admin@gmail.com") ? "admin" : "user";
 
                         Users u = new Users(
