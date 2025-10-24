@@ -1,4 +1,4 @@
-git add .package com.example.movieticketapp.Activity.Account;
+package com.example.movieticketapp.Activity.Account;
 
 import android.app.Activity;
 import android.app.TaskStackBuilder;
@@ -45,55 +45,36 @@ import com.squareup.picasso.Picasso;
 import java.util.UUID;
 
 public class EditProfileActivity extends AppCompatActivity {
-    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
-    EditText fullNameET;
-    EditText emailET;
 
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    EditText fullNameET, emailET;
     ImageView addImage;
     RoundedImageView avatarImg;
-    UploadTask uploadTask;
-    String cinemaImg;
     Uri filePath;
     String img;
-    FirebaseUser currentUser =  FirebaseRequest.mAuth.getCurrentUser();
+    String uploadedAvatarUrl;
+
+    FirebaseUser currentUser = FirebaseRequest.mAuth.getCurrentUser();
     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     FirebaseFirestore databaseReference = FirebaseFirestore.getInstance();
-    ActivityResultLauncher<Intent> activityLauch = registerForActivityResult(
+    UploadTask uploadTask;
+
+    ActivityResultLauncher<Intent> activityLaunch = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        // There are no request codes
                         Intent data = result.getData();
-                        if(data.getData() != null){
+                        if (data != null && data.getData() != null) {
                             filePath = data.getData();
-
                             avatarImg.setImageURI(filePath);
                             img = UUID.randomUUID().toString();
-
-                            StorageReference ref
-                                    = storageReference
-                                    .child(img);
-                            ref.putFile(filePath).addOnSuccessListener(
-                                    new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
-                                        @Override
-                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                                        {
-                                            Toast.makeText(EditProfileActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e)
-                                {
-                                    Toast.makeText(EditProfileActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
                         }
                     }
                 }
             });
+
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -106,151 +87,147 @@ public class EditProfileActivity extends AppCompatActivity {
         unregisterReceiver(networkChangeListener);
         super.onStop();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_screen);
-        addImage =  findViewById(R.id.addimage);
+
+        addImage = findViewById(R.id.addimage);
         avatarImg = findViewById(R.id.avatarImg);
-        fullNameET=findViewById(R.id.fullname);
-        emailET=findViewById(R.id.emailaddress);
+        fullNameET = findViewById(R.id.fullname);
+        emailET = findViewById(R.id.emailaddress);
 
-        FirebaseRequest.database.collection("Users").document(FirebaseRequest.mAuth.getCurrentUser().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Users user = documentSnapshot.toObject(Users.class);
-                fullNameET.setText(user.getName());
-                emailET.setText(user.getEmail());
-                Picasso.get().load(user.getAvatar()).into(avatarImg);
-            }
-        });
-//        fullNameET.setText(FirebaseRequest.mAuth.getCurrentUser().getDisplayName());
-//        emailET.setText(FirebaseRequest.mAuth.getCurrentUser().getEmail());
-//        Picasso.get().load(currentUser.getPhotoUrl()).into(avatarImg);
-        addImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent =  new Intent(Intent.ACTION_PICK);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                activityLauch.launch(intent);
-            }
-        });
-        Button backBt = findViewById(R.id.backbutton);
-        backBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        Button UpdateBtn =  findViewById(R.id.UpdateBtn);
-        UpdateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UpdateUser();
-            }
-        });
-
-    }
-    void UpdateUser()
-    {
-        if(fullNameET.length()==0)
-        {
-            fullNameET.setError("Full Name is not empty!!!");
-        }
-        else if(emailET.length()==0)
-        {
-            emailET.setError("Email is not empty!!!");
-        }
-        else{
-            Update();
-            finish();
-        }
-        updateAvatar();
-    }
-    void Update()
-    {
-        if(!emailET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getEmail()))
-            UpdateEmail();
-        if(!fullNameET.getText().toString().equals(FirebaseRequest.mAuth.getCurrentUser().getDisplayName()))
-            UpdateFullName();
-    }
-
-    void UpdateFullName()
-    {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullNameET.getText().toString())
-                .build();
-        FirebaseRequest.mAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-
-                } else {
-                    // An error occurred while updating the user password
-                    // Handle the error
-                    UpdateError("Full Name");
-                }
-            }
-        });
-        FirebaseRequest.database.collection("Users").document(currentUser.getUid()).update("Name", fullNameET.getText().toString());
-
-    }
-    void UpdateEmail()
-    {
-        FirebaseRequest.mAuth.getCurrentUser().updateEmail(emailET.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FirebaseRequest.mAuth.signOut();
-                    Intent loginIntent = new Intent(EditProfileActivity.this, SignInActivity.class);
-                    TaskStackBuilder.create(EditProfileActivity.this).addNextIntentWithParentStack(loginIntent).startActivities();
-                } else {
-                    UpdateError("Email");
-                }
-            }
-        });
-        FirebaseRequest.database.collection("Users").document(currentUser.getUid()).update("Email", emailET.getText().toString());
-    }
-//    void SuccessUpdate()
-//    {
-//        Intent i = new Intent(EditProfileActivity.this, AccountActivity.class);
-//        startActivity(i);
-//    }
-    void UpdateError(String error)
-    {
-        Toast.makeText(EditProfileActivity.this, "Edit Profile failed : " + error,
-                Toast.LENGTH_SHORT).show();
-    }
-    void updateAvatar(){
-        if(filePath != null){
-            StorageReference ref = storageReference.child(img);
-            uploadTask = ref.putFile(filePath);
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
+        // Load dữ liệu người dùng hiện tại
+        FirebaseRequest.database.collection("Users")
+                .document(currentUser.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Users user = documentSnapshot.toObject(Users.class);
+                    if (user != null) {
+                        fullNameET.setText(user.getName());
+                        emailET.setText(user.getEmail());
+                        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                            Picasso.get().load(user.getAvatar()).into(avatarImg);
+                        }
                     }
+                });
 
-                    // Continue with the task to get the download URL
-                    return ref.getDownloadUrl();
+        addImage.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            activityLaunch.launch(intent);
+        });
+
+        Button backBt = findViewById(R.id.backbutton);
+        backBt.setOnClickListener(view -> finish());
+
+        Button updateBtn = findViewById(R.id.UpdateBtn);
+        updateBtn.setOnClickListener(view -> UpdateUser());
+    }
+
+    void UpdateUser() {
+        if (fullNameET.length() == 0) {
+            fullNameET.setError("Full Name is not empty!!!");
+            return;
+        }
+        if (emailET.length() == 0) {
+            emailET.setError("Email is not empty!!!");
+            return;
+        }
+
+        // Cập nhật dữ liệu
+        Update();
+        updateAvatar(); // upload ảnh nếu có
+    }
+
+    void Update() {
+        String newEmail = emailET.getText().toString().trim();
+        String newName = fullNameET.getText().toString().trim();
+
+        if (!newEmail.equals(currentUser.getEmail())) {
+            UpdateEmail(newEmail);
+        }
+        if (!newName.equals(currentUser.getDisplayName())) {
+            UpdateFullName(newName);
+        }
+    }
+
+    void UpdateFullName(String newName) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newName)
+                .build();
+
+        currentUser.updateProfile(profileUpdates).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseRequest.database.collection("Users")
+                        .document(currentUser.getUid())
+                        .update("Name", newName);
+            } else {
+                UpdateError("Full Name");
+            }
+        });
+    }
+
+    void UpdateEmail(String newEmail) {
+        currentUser.updateEmail(newEmail).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseRequest.database.collection("Users")
+                        .document(currentUser.getUid())
+                        .update("Email", newEmail)
+                        .addOnSuccessListener(unused -> {
+                            FirebaseRequest.mAuth.signOut();
+                            Intent loginIntent = new Intent(EditProfileActivity.this, SignInActivity.class);
+                            TaskStackBuilder.create(EditProfileActivity.this)
+                                    .addNextIntentWithParentStack(loginIntent)
+                                    .startActivities();
+                        });
+            } else {
+                UpdateError("Email");
+            }
+        });
+    }
+
+    void updateAvatar() {
+        if (filePath != null) {
+            StorageReference ref = storageReference.child("avatars/" + img);
+            uploadTask = ref.putFile(filePath);
+
+            uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
                 }
+                return ref.getDownloadUrl();
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
-                        cinemaImg = task.getResult().toString();
-                        CollectionReference cinemaCollection = FirebaseFirestore.getInstance().collection("Users");
-                        DocumentReference doc;
-                        doc = cinemaCollection.document(currentUser.getUid());
+                        uploadedAvatarUrl = task.getResult().toString();
 
-                        doc.update("avatar", cinemaImg);
+                        // Cập nhật Firestore
+                        CollectionReference userCollection = FirebaseFirestore.getInstance().collection("Users");
+                        DocumentReference doc = userCollection.document(currentUser.getUid());
+                        doc.update("avatar", uploadedAvatarUrl);
 
+                        // Cập nhật Firebase Auth profile
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setPhotoUri(Uri.parse(uploadedAvatarUrl))
+                                .build();
 
+                        currentUser.updateProfile(profileUpdates);
+                        Toast.makeText(EditProfileActivity.this, "Avatar updated successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        UpdateError("Avatar Upload");
                     }
                 }
             });
+        } else {
+            finish();
         }
+    }
 
+    void UpdateError(String error) {
+        Toast.makeText(EditProfileActivity.this, "Edit Profile failed: " + error, Toast.LENGTH_SHORT).show();
     }
 }
