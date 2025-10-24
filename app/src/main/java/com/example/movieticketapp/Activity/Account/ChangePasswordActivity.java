@@ -19,99 +19,96 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 
 public class ChangePasswordActivity extends AppCompatActivity {
-    Button backBtn;
-    EditText passwordET;
-    EditText CurrentPasswordET;
-    EditText confirmPasswordET;
 
-    Button changePasswordBtn;
+    Button backBtn, changePasswordBtn;
+    EditText currentPasswordET, newPasswordET, confirmPasswordET;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+
+        // Ánh xạ
         backBtn = findViewById(R.id.backbutton);
-        passwordET=findViewById(R.id.password);
-        confirmPasswordET=findViewById(R.id.confirmpassword);
-        CurrentPasswordET=findViewById(R.id.currentPassword);
+        newPasswordET = findViewById(R.id.password);
+        confirmPasswordET = findViewById(R.id.confirmpassword);
+        currentPasswordET = findViewById(R.id.currentPassword);
         changePasswordBtn = findViewById(R.id.changePasswordBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        changePasswordBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changePassword();
-            }
-        });
+
+        // Quay lại màn trước
+        backBtn.setOnClickListener(v -> finish());
+
+        // Đổi mật khẩu
+        changePasswordBtn.setOnClickListener(v -> changePassword());
     }
-    void changePassword(){
-        if(CurrentPasswordET.length()==0)
-        {
-            CurrentPasswordET.setError("Current Password is not empty!!!");
+
+    void changePassword() {
+        String currentPassword = currentPasswordET.getText().toString().trim();
+        String newPassword = newPasswordET.getText().toString().trim();
+        String confirmPassword = confirmPasswordET.getText().toString().trim();
+
+        // ✅ Kiểm tra dữ liệu nhập
+        if (currentPassword.isEmpty()) {
+            currentPasswordET.setError("Current password is required!");
+            return;
         }
-        else if(passwordET.length()==0)
-        {
-            passwordET.setError("Password is not empty!!!");
+        if (newPassword.isEmpty()) {
+            newPasswordET.setError("New password is required!");
+            return;
         }
-        else if(passwordET.length() < 6){
-            passwordET.setError("Password should be at least 6 characters!!!");
+        if (newPassword.length() < 6) {
+            newPasswordET.setError("Password should be at least 6 characters!");
+            return;
         }
-        else if(!confirmPasswordET.getText().toString().equals(passwordET.getText().toString()))
-        {
-            confirmPasswordET.setError("Password and confirmation passwords are not equals !!!");
+        if (!confirmPassword.equals(newPassword)) {
+            confirmPasswordET.setError("Passwords do not match!");
+            return;
         }
-        else{
-            AuthCredential credential = EmailAuthProvider.getCredential(FirebaseRequest.mAuth.getCurrentUser().getEmail(), CurrentPasswordET.getText().toString());
-            FirebaseRequest.mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+        if (currentPassword.equals(newPassword)) {
+            Toast.makeText(this, "New password must be different from current password!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // ✅ Re-authenticate
+        AuthCredential credential = EmailAuthProvider.getCredential(
+                FirebaseRequest.mAuth.getCurrentUser().getEmail(),
+                currentPassword
+        );
+
+        FirebaseRequest.mAuth.getCurrentUser()
+                .reauthenticate(credential)
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // User has been successfully re-authenticated
-                        // You can update the password now
-                        Update();
-
+                        // ✅ Sau khi xác thực lại thành công → cập nhật mật khẩu
+                        updatePassword(newPassword);
                     } else {
-                        // An error occurred while re-authenticating the user
-                        // Handle the error
-                        Toast.makeText(ChangePasswordActivity.this, "Current password is not correct!", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(ChangePasswordActivity.this,
+                                "Current password is incorrect!",
+                                Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-
-
-        }
-    }
-    void Update()
-    {
-        String name = "new_password";
-        if(!CurrentPasswordET.getText().toString().equals(passwordET.getText().toString()))
-            UpdatePassword(passwordET.getText().toString());
-
-    }
-    void UpdatePassword(String newPassword)
-    {
-        FirebaseRequest.mAuth.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FirebaseRequest.mAuth.signOut();
-                    Intent loginIntent = new Intent(ChangePasswordActivity.this, SignInActivity.class);
-                    TaskStackBuilder.create(ChangePasswordActivity.this).addNextIntentWithParentStack(loginIntent).startActivities();
-                } else {
-                    // An error occurred while updating the user password
-                    // Handle the error
-                }
-            }
-        });
-    }
-    void UpdateError(String error)
-    {
-        Toast.makeText(ChangePasswordActivity.this, "Edit Profile failed : " + error,
-                Toast.LENGTH_SHORT).show();
+                });
     }
 
+    void updatePassword(String newPassword) {
+        FirebaseRequest.mAuth.getCurrentUser()
+                .updatePassword(newPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(ChangePasswordActivity.this,
+                                "Password changed successfully! Please sign in again.",
+                                Toast.LENGTH_SHORT).show();
+
+                        // ✅ Đăng xuất và điều hướng về màn hình đăng nhập
+                        FirebaseRequest.mAuth.signOut();
+                        Intent loginIntent = new Intent(ChangePasswordActivity.this, SignInActivity.class);
+                        TaskStackBuilder.create(ChangePasswordActivity.this)
+                                .addNextIntentWithParentStack(loginIntent)
+                                .startActivities();
+                    } else {
+                        Toast.makeText(ChangePasswordActivity.this,
+                                "Failed to change password: " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }
