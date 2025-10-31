@@ -1,7 +1,5 @@
 package com.example.movieticketapp.Model;
 
-import android.util.Log;
-
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;

@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Booking;
+package com.example.movieticketapp.Activity.Booking;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,8 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.movieticketapp.Adapter.CinameNameAdapter;
-import com.example.movieticketapp.Adapter.TimeBookedAdapter;
+//import com.example.movieticketapp.Adapter.CinameNameAdapter;
+//import com.example.movieticketapp.Adapter.TimeBookedAdapter;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Cinema;
 import com.example.movieticketapp.Model.City;
@@ -134,15 +134,15 @@ public class BookedActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(!InforBooked.getInstance().isTimeSelected|| !InforBooked.getInstance().isDateSelected || !InforBooked.getInstance().isCitySelected ){
+            if(!InforBooked.getInstance().isTimeSelected|| !com.example.movieticketapp.Model.InforBooked.getInstance().isDateSelected || !com.example.movieticketapp.Model.InforBooked.getInstance().isCitySelected ){
                 Toast.makeText(BookedActivity.this, "Please choose time and date!", Toast.LENGTH_SHORT).show();
             }
             else{
                 Intent intent = new Intent(BookedActivity.this, BookSeatActivity.class);
                 intent.putExtra("selectedFilm", selectedFilm);
-                intent.putExtra("cinema", (Parcelable) InforBooked.getInstance().cinema);
-                intent.putExtra("dateBooked", InforBooked.getInstance().dateBooked);
-                intent.putExtra("timeBooked", InforBooked.getInstance().timeBooked);
+                intent.putExtra("cinema", (Parcelable) com.example.movieticketapp.Model.InforBooked.getInstance().cinema);
+                intent.putExtra("dateBooked", com.example.movieticketapp.Model.InforBooked.getInstance().dateBooked);
+                intent.putExtra("timeBooked", com.example.movieticketapp.Model.InforBooked.getInstance().timeBooked);
                 startActivity(intent);
             }
 
@@ -151,11 +151,11 @@ public class BookedActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InforBooked.getInstance().isDateSelected = false;
-                InforBooked.getInstance().isTimeSelected = false;
-                InforBooked.getInstance().isCitySelected = false;
-                InforBooked.getInstance().timeBooked = "";
-                InforBooked.getInstance().prevPosition = -1;
+                com.example.movieticketapp.Model.InforBooked.getInstance().isDateSelected = false;
+                com.example.movieticketapp.Model.InforBooked.getInstance().isTimeSelected = false;
+                com.example.movieticketapp.Model.InforBooked.getInstance().isCitySelected = false;
+                com.example.movieticketapp.Model.InforBooked.getInstance().timeBooked = "";
+                com.example.movieticketapp.Model.InforBooked.getInstance().prevPosition = -1;
                 finish();
             }
         });
@@ -180,7 +180,7 @@ public class BookedActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                            InforBooked.getInstance().isCitySelected = true;
+                            com.example.movieticketapp.Model.InforBooked.getInstance().isCitySelected = true;
 
                             List<Cinema> listCinema = new ArrayList<Cinema>();
                             FirebaseRequest.database.collection("Cinema").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -215,11 +215,11 @@ public class BookedActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        InforBooked.getInstance().isDateSelected = false;
-        InforBooked.getInstance().isTimeSelected = false;
-        InforBooked.getInstance().isCitySelected = false;
-        InforBooked.getInstance().timeBooked = "";
-        InforBooked.getInstance().prevPosition = -1;
+        com.example.movieticketapp.Model.InforBooked.getInstance().isDateSelected = false;
+        com.example.movieticketapp.Model.InforBooked.getInstance().isTimeSelected = false;
+        com.example.movieticketapp.Model.InforBooked.getInstance().isCitySelected = false;
+        com.example.movieticketapp.Model.InforBooked.getInstance().timeBooked = "";
+        com.example.movieticketapp.Model.InforBooked.getInstance().prevPosition = -1;
 
         super.onBackPressed();
     }

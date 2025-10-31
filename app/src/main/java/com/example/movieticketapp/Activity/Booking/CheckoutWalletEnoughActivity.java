@@ -277,8 +277,8 @@ public class CheckoutWalletEnoughActivity extends AppCompatActivity {
                                 }
                             });
                             InforBooked.getInstance().isCitySelected = false;
-                            InforBooked.getInstance().isDateSelected = false;
-                            InforBooked.getInstance().timeBooked = "";
+                            com.example.movieticketapp.Model.InforBooked.getInstance().isDateSelected = false;
+                            com.example.movieticketapp.Model.InforBooked.getInstance().timeBooked = "";
                             Intent i = new Intent(getApplicationContext(), SuccessCheckoutActivity.class);
                             //i.putExtra(ExtraIntent.film, film);
                             startActivity(i);
