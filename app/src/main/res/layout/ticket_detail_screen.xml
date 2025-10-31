@@ -1,70 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background_1"
     tools:context=".Activity.Ticket.TicketDetailActivity">
+
+    <!-- Cuộn toàn bộ nội dung -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:orientation="vertical">
+
+            <!-- Header -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="70dp">
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/backbutton"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="left"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/back_icon" />
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/back_icon"
+                    android:contentDescription="@string/back_button" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ticket Details"
-                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/ticket_details"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textFontWeight="600"
-                    android:textSize="24dp"
-                    android:textColor="@color/white_background"/>
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:textColor="@color/white_background" />
             </RelativeLayout>
+
+            <!-- Thông tin phim -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:paddingTop="24dp"
+                android:paddingVertical="24dp"
+                android:paddingHorizontal="13dp"
                 android:layout_marginBottom="30dp"
-                android:paddingBottom="24dp"
-                android:paddingRight="13dp"
-                android:paddingLeft="13dp"
                 android:orientation="vertical">
+
+                <!-- Ảnh + tên phim -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top|left"
+                    android:gravity="top|start"
                     android:orientation="horizontal">
+
                     <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/ivPoster"
                         android:layout_width="85dp"
                         android:layout_height="125dp"
                         app:riv_corner_radius="8dp"
-                        android:id="@+id/ivPoster"/>
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/poster_image" />
+
                     <LinearLayout
-                        android:layout_width="167dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="top"
-                        android:layout_marginLeft="14.6dp">
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvName"
@@ -72,225 +84,123 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
                             android:textColor="@color/white"
-                            android:textFontWeight="500"
-                            android:textSize="16dp" />
-                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <!-- Rating -->
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_gravity="top|left"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginTop="12dp"
-                            >
+                            android:layout_marginVertical="12dp">
+
                             <RatingBar
                                 android:id="@+id/rating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:numStars="5"
-                                android:isIndicator="false"
+                                android:isIndicator="true"
                                 style="?android:attr/ratingBarStyleSmall"
                                 android:progressTint="#FFFFAF34"
-                                android:progressBackgroundTint="#FFDADADA"
-                                />
+                                android:progressBackgroundTint="#FFDADADA" />
+
                             <TextView
-                                android:layout_gravity="center"
                                 android:id="@+id/vote"
-                                android:layout_marginLeft="10dp"
-                                android:textColor="@color/white"
-                                android:fontFamily="@font/montserrat_regular"
-                                android:textFontWeight="500"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
-                        </androidx.appcompat.widget.LinearLayoutCompat>
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvKind"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:textColor="@color/white_opacity_70"
-                            android:textFontWeight="400"
-                            android:textSize="12dp" />
+                            android:textSize="12sp" />
+
                         <TextView
                             android:id="@+id/tvDuration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="12dp"
-                            android:textColor="@color/white_opacity_70"/>
+                            android:textColor="@color/white_opacity_70"
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
+
+                <!-- Thông tin vé -->
                 <LinearLayout
                     android:id="@+id/inforTicket"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="9dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cinema"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white_opacity_70"
-                            android:layout_alignParentLeft="true"/>
-                        <TextView
-                            android:id="@+id/cinema"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white"
-                            android:layout_alignParentRight="true"/>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="9dp"
-                        android:layout_marginBottom="9dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Date Time"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white_opacity_70"
-                            android:layout_alignParentLeft="true"/>
-                        <TextView
-                            android:id="@+id/DateAndTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white"
-                            android:layout_alignParentRight="true"/>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="9dp"
-                        android:layout_marginBottom="9dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Seat Number"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white_opacity_70"
-                            android:layout_alignParentLeft="true"/>
-                        <TextView
-                            android:id="@+id/SeatNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white"
-                            android:layout_alignParentRight="true"/>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="9dp"
-                        android:layout_marginBottom="9dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Paid"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white_opacity_70"
-                            android:layout_alignParentLeft="true"/>
-                        <TextView
-                            android:id="@+id/Paid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white"
-                            android:layout_alignParentRight="true"/>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:id="@+id/voucherLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="9dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Voucher"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white_opacity_70"
-                            android:layout_alignParentLeft="true"/>
-                        <TextView
-                            android:id="@+id/voucher"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textFontWeight="400"
-                            android:textSize="16dp"
-                            android:textColor="@color/white"
-                            android:layout_alignParentRight="true"/>
-                    </RelativeLayout>
+                    <!-- Cinema -->
+                    <include layout="@layout/item_ticket_info"
+                        android:id="@+id/itemCinema"
+                        android:tag="Cinema" />
+
+                    <!-- Date & Time -->
+                    <include layout="@layout/item_ticket_info"
+                        android:id="@+id/itemDateTime"
+                        android:tag="Date Time" />
+
+                    <!-- Seat -->
+                    <include layout="@layout/item_ticket_info"
+                        android:id="@+id/itemSeat"
+                        android:tag="Seat Number" />
+
+                    <!-- Paid -->
+                    <include layout="@layout/item_ticket_info"
+                        android:id="@+id/itemPaid"
+                        android:tag="Paid" />
+
+                    <!-- Voucher -->
+                    <include layout="@layout/item_ticket_info"
+                        android:id="@+id/itemVoucher"
+                        android:tag="Voucher" />
                 </LinearLayout>
 
-
+                <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
                     android:background="@color/white_opacity_70"
-                    android:layout_marginTop="27dp"
-                    android:layout_marginBottom="13dp"
-                    />
+                    android:layout_marginVertical="20dp" />
+
+                <!-- QR -->
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:id="@+id/QRCode"
-                    />
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/qr_code" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ID Order"
+                    android:text="@string/id_order"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textFontWeight="400"
-                    android:textSize="14dp"
                     android:textColor="@color/white_opacity_70"
+                    android:textSize="14sp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp" />
+
                 <TextView
                     android:id="@+id/IDOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textFontWeight="400"
-                    android:textSize="20dp"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:layout_gravity="center"/>
-
+                    android:textSize="20sp"
+                    android:layout_gravity="center" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
