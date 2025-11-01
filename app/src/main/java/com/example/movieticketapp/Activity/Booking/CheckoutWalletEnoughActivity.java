@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Booking;
+package com.example.movieticketapp.Activity.Booking;
 
 import android.content.Intent;
 import android.content.IntentFilter;

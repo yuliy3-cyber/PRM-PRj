@@ -1,7 +1,5 @@
 UserAndDiscountpackage com.example.movieticketapp.Model;
 
-import kotlin.text.UStringsKt;
-
 public class CheckoutFilmModel {
     private String name;
     private Float vote;
