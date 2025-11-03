@@ -1,5 +1,4 @@
-UserAndDiscountpackage com.example.movieticketapp.Model;
-
+package com.example.movieticketapp.Model;
 public class CheckoutFilmModel {
     private String name;
     private Float vote;
@@ -51,7 +50,7 @@ public class CheckoutFilmModel {
 
 
 
-    public CheckoutFilmModel(String name, Float vote, String genre, String duration, String poster) {
+    public CheckoutFilmModel2(String name, Float vote, String genre, String duration, String poster) {
         this.name = name;
         this.vote = vote;
         this.genre = genre;
