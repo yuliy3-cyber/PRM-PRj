@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +22,7 @@ import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,6 +39,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
 
     private ListView listView;
     private FirebaseFirestore firestore;
+    private FirebaseAuth mAuth;
     private final ArrayList<Ticket> arrayList = new ArrayList<>();
     private TicketListAdapter adapter;
 
@@ -55,7 +55,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
         setupBottomNavigation();
         setupButtonListeners();
 
-        // Default: load all tickets
+        // Load mặc định tất cả vé
         setButtonSelected(btnAll);
         loadListTicket("all");
     }
@@ -65,7 +65,9 @@ public class MyTicketAllActivity extends AppCompatActivity {
         btnAll = findViewById(R.id.buttonAllTicket);
         btnNew = findViewById(R.id.buttonNewsTicket);
         btnExpired = findViewById(R.id.buttonExpiredTicket);
+
         firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void setupButtonListeners() {
@@ -81,7 +83,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
 
         btnExpired.setOnClickListener(v -> {
             setButtonSelected(btnExpired);
-            loadListTicket("expire");
+            loadListTicket("expired");
         });
 
         listView.setOnItemClickListener((adapterView, view, position, id) -> {
@@ -95,7 +97,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
     }
 
     private void setButtonSelected(Button selected) {
-        // Reset text for all
+        // Reset tất cả nút
         btnAll.setText(null);
         btnNew.setText(null);
         btnExpired.setText(null);
@@ -103,7 +105,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
         btnNew.setSelected(false);
         btnExpired.setSelected(false);
 
-        // Mark selected
+        // Đặt lại nút được chọn
         selected.setSelected(true);
         switch (selected.getId()) {
             case R.id.buttonAllTicket:
@@ -116,14 +118,15 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 btnExpired.setText("Expired");
                 break;
         }
+
         arrayList.clear();
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     private void setupBottomNavigation() {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.getMenu().findItem(R.id.ticketPage).setChecked(true);
 
-        // Hide/show based on user type
         try {
             if (Users.currentUser != null && "admin".equals(Users.currentUser.getAccountType())) {
                 Menu menu = bottomNavigationView.getMenu();
@@ -131,12 +134,12 @@ public class MyTicketAllActivity extends AppCompatActivity {
                 menu.findItem(R.id.ReportPage).setVisible(true);
             }
         } catch (Exception e) {
-            Log.e("MyTicketAllActivity", "User check failed", e);
+            Log.e("MyTicketAllActivity", "User role check failed", e);
         }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
             Intent intent = null;
+            int id = item.getItemId();
 
             if (id == R.id.homePage) {
                 intent = new Intent(this, HomeActivity.class);
@@ -168,6 +171,7 @@ public class MyTicketAllActivity extends AppCompatActivity {
                             Log.e("FirestoreError", e.getMessage());
                             return;
                         }
+
                         if (snapshots == null || snapshots.isEmpty()) {
                             arrayList.clear();
                             if (adapter != null) adapter.notifyDataSetChanged();
@@ -179,33 +183,40 @@ public class MyTicketAllActivity extends AppCompatActivity {
                         Date now = calendar.getTime();
 
                         arrayList.clear();
+
                         for (DocumentSnapshot doc : docs) {
-                            if (!FirebaseRequest.mAuth.getUid().equals(doc.getString("userID")))
-                                continue;
+                            if (!doc.exists()) continue;
+                            if (!doc.contains("userID") || !doc.contains("time")) continue;
+
+                            String userID = doc.getString("userID");
+                            if (mAuth.getUid() == null || !mAuth.getUid().equals(userID)) continue;
 
                             Ticket ticket = doc.toObject(Ticket.class);
                             if (ticket == null) continue;
 
-                            Date showTime = doc.getTimestamp("time") != null
-                                    ? doc.getTimestamp("time").toDate()
-                                    : null;
+                            Date showTime = doc.getTimestamp("time").toDate();
                             if (showTime == null) continue;
 
                             switch (type) {
                                 case "new":
                                     if (now.before(showTime)) arrayList.add(ticket);
                                     break;
-                                case "expire":
-                                    if (!now.before(showTime)) arrayList.add(ticket);
+                                case "expired":
+                                    if (now.after(showTime) || now.equals(showTime)) arrayList.add(ticket);
                                     break;
                                 default:
                                     arrayList.add(ticket);
+                                    break;
                             }
                         }
 
-                        adapter = new TicketListAdapter(MyTicketAllActivity.this,
-                                R.layout.list_ticket_view, arrayList);
-                        listView.setAdapter(adapter);
+                        if (adapter == null) {
+                            adapter = new TicketListAdapter(MyTicketAllActivity.this,
+                                    R.layout.list_ticket_view, arrayList);
+                            listView.setAdapter(adapter);
+                        } else {
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
     }
