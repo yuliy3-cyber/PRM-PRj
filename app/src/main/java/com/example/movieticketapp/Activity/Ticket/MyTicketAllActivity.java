@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -16,8 +14,6 @@ import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
-import com.example.movieticketapp.Adapter.TicketListAdapter;
-import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Ticket;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
