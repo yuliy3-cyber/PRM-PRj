@@ -14,8 +14,6 @@ import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Report.ReportActivity;
 import com.example.movieticketapp.Activity.Wallet.MyWalletActivity;
-import com.example.movieticketapp.Model.Ticket;
-import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
