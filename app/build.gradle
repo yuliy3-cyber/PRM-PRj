@@ -65,6 +65,7 @@ dependencies {
     // 🧰 Hỗ trợ khác (nếu cần)
     // -------------------------------
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation libs.recyclerview
 
     // -------------------------------
     // 🧪 Kiểm thử
