@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.movieticketapp.Constants;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.Users;
 import com.example.movieticketapp.NetworkChangeListener;
@@ -204,13 +205,13 @@ public class SignUpActivity extends AppCompatActivity {
                         UpdatePhotho(urlAvatar);
 
                         // ✅ Nếu email là admin -> set quyền admin
-                        String accountType = email.equals("admin@gmail.com") ? "admin" : "user";
+                        String accountType = email.equals(Constants.ADMIN_EMAIL) ? "admin" : "user";
 
                         Users u = new Users(
                                 user.getUid(),
                                 Name,
                                 email,
-                                1000000, // Set tiền mặc định: 1 triệu VNĐ
+                                Constants.DEFAULT_WALLET_AMOUNT, // Số tiền mặc định từ Constants
                                 accountType,
                                 urlAvatar,
                                 new ArrayList<>(),

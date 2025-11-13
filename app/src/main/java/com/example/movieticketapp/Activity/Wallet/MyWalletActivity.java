@@ -25,6 +25,7 @@ import com.example.movieticketapp.Activity.HomeActivity;
 import com.example.movieticketapp.Activity.Notification.NotificationActivity;
 import com.example.movieticketapp.Activity.Ticket.MyTicketAllActivity;
 import com.example.movieticketapp.Adapter.MovieBookedAdapter;
+import com.example.movieticketapp.Constants;
 import com.example.movieticketapp.Firebase.FirebaseRequest;
 import com.example.movieticketapp.Model.FilmModel;
 import com.example.movieticketapp.Model.InforBooked;
@@ -153,7 +154,7 @@ public class MyWalletActivity extends AppCompatActivity {
         userData.put("UserID", FirebaseRequest.mAuth.getUid());
         userData.put("Name", currentUser != null && currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "User");
         userData.put("Email", currentUser != null ? currentUser.getEmail() : "");
-        userData.put("Wallet", 1000000); // 1 triệu VNĐ
+        userData.put("Wallet", Constants.DEFAULT_WALLET_AMOUNT); // Số tiền mặc định từ Constants
         userData.put("accountType", "user");
         userData.put("avatar", "https://example.com/default-avatar.jpg");
 
