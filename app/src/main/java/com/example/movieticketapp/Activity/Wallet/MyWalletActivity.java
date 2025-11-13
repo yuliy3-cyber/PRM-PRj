@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -147,10 +148,11 @@ public class MyWalletActivity extends AppCompatActivity {
 
     private void createNewUserWithWallet() {
         // Tạo user mới với tiền mặc định
+        FirebaseUser currentUser = FirebaseRequest.mAuth.getCurrentUser();
         Map<String, Object> userData = new HashMap<>();
         userData.put("UserID", FirebaseRequest.mAuth.getUid());
-        userData.put("Name", FirebaseRequest.mAuth.getDisplayName() != null ? FirebaseRequest.mAuth.getDisplayName() : "User");
-        userData.put("Email", FirebaseRequest.mAuth.getEmail());
+        userData.put("Name", currentUser != null && currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "User");
+        userData.put("Email", currentUser != null ? currentUser.getEmail() : "");
         userData.put("Wallet", 1000000); // 1 triệu VNĐ
         userData.put("accountType", "user");
         userData.put("avatar", "https://example.com/default-avatar.jpg");
