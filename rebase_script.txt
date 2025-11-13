@@ -1,0 +1,42 @@
+# Đề xuất tên commit messages mới:
+
+# Commit 1: Models và common classes
+# Cũ: "Commit 1/10: Add models and common classes - Copy all model classes..."
+# Mới: "feat: Add data models and common utility classes"
+
+# Commit 2: Adapters
+# Cũ: "Commit 2/10: Add adapter classes - Copy all adapter classes..."
+# Mới: "feat: Add RecyclerView adapters for UI components"
+
+# Commit 3: Account activities
+# Cũ: "Commit 3/10: Add Account activities - Copy all account-related activities..."
+# Mới: "feat: Add authentication and profile management activities"
+
+# Commit 4: Booking activities
+# Cũ: "Commit 4/10: Add Booking activities - Copy booking-related activities..."
+# Mới: "feat: Add booking and checkout flow activities"
+
+# Commit 5: Remaining activities
+# Cũ: "Commit 5/10: Add remaining activities - Copy Movie, Ticket, Wallet..."
+# Mới: "feat: Add movie, ticket, wallet, and admin management activities"
+
+# Commit 6: Fragments, ViewHolders
+# Cũ: "Commit 6/10: Add Fragments, ViewHolders, Interfaces and Firebase..."
+# Mới: "feat: Add fragments, view holders, and Firebase integration"
+
+# Commit 7: Layout files
+# Cũ: "Commit 7/10: Add layout files - Copy all XML layout files..."
+# Mới: "feat: Add XML layout files for all screens and components"
+
+# Commit 8: Drawable resources
+# Cũ: "Commit 8/10: Add drawable resources - Copy all drawable resources..."
+# Mới: "feat: Add drawable resources and UI assets"
+
+# Commit 9: Remaining resources
+# Cũ: "Commit 9/10: Add remaining resources - Copy values, fonts, mipmaps..."
+# Mới: "feat: Add fonts, colors, animations, and app resources"
+
+# Commit 10: Build configuration
+# Cũ: "Commit 10/10: Update build configuration - Update build.gradle..."
+# Mới: "chore: Update build configuration and project settings"
+

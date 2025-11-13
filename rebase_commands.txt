@@ -1,0 +1,20 @@
+# Hướng dẫn sử dụng git rebase -i để đổi tên commit messages
+# Chạy: git rebase -i HEAD~12
+# Trong editor, thay đổi "pick" thành "reword" cho các commit cần sửa
+# Sau đó sửa commit messages theo danh sách dưới đây:
+
+# Commit messages mới (không có "copy" và số thứ tự):
+
+1. feat: Add data models and common utility classes
+2. feat: Add RecyclerView adapters for UI components  
+3. feat: Add authentication and profile management activities
+4. feat: Add booking and checkout flow activities
+5. feat: Add movie, ticket, wallet, and admin management activities
+6. feat: Add fragments, view holders, and Firebase integration
+7. feat: Add XML layout files for all screens and components
+8. feat: Add drawable resources and UI assets
+9. feat: Add fonts, colors, animations, and app resources
+10. chore: Update build configuration and project settings
+11. fix: Resolve merge conflicts using prm392_cinemabooking versions
+12. fix: Resolve all merge conflicts with prm392_cinemabooking versions
+
