@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.concurrent.Executor;
 
 public class FirebaseRequest {
-    public static FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth = FirebaseAuth.getInstance();
     public static FirebaseFirestore database = FirebaseFirestore.getInstance();
 
 
