@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
@@ -226,8 +227,53 @@ public class SignUpActivity extends AppCompatActivity {
                         Intent i = new Intent(getApplicationContext(), ConfirmationProfileActivity.class);
                         startActivity(i);
                     } else {
-                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        Toast.makeText(SignUpActivity.this, "The email had used.", Toast.LENGTH_SHORT).show();
+                        Exception exception = task.getException();
+                        Log.w(TAG, "createUserWithEmail:failure", exception);
+                        String errorMessage = "Registration failed. Please try again.";
+                        
+                        if (exception != null) {
+                            if (exception instanceof FirebaseAuthException) {
+                                FirebaseAuthException authException = (FirebaseAuthException) exception;
+                                String errorCode = authException.getErrorCode();
+                                Log.d(TAG, "Firebase Auth Error Code: " + errorCode);
+                                
+                                switch (errorCode) {
+                                    case "ERROR_EMAIL_ALREADY_IN_USE":
+                                        errorMessage = "The email address is already in use.";
+                                        break;
+                                    case "ERROR_INVALID_EMAIL":
+                                        errorMessage = "Invalid email address format.";
+                                        break;
+                                    case "ERROR_WEAK_PASSWORD":
+                                        errorMessage = "Password is too weak. Please use at least 6 characters.";
+                                        break;
+                                    case "ERROR_NETWORK_REQUEST_FAILED":
+                                        errorMessage = "Network error. Please check your internet connection.";
+                                        break;
+                                    default:
+                                        errorMessage = "Error: " + exception.getMessage();
+                                        break;
+                                }
+                            } else {
+                                String exceptionMessage = exception.getMessage();
+                                if (exceptionMessage != null) {
+                                    if (exceptionMessage.contains("email address is already in use") || 
+                                        exceptionMessage.contains("ERROR_EMAIL_ALREADY_IN_USE")) {
+                                        errorMessage = "The email address is already in use.";
+                                    } else if (exceptionMessage.contains("invalid email") || 
+                                              exceptionMessage.contains("ERROR_INVALID_EMAIL")) {
+                                        errorMessage = "Invalid email address format.";
+                                    } else if (exceptionMessage.contains("network") || 
+                                              exceptionMessage.contains("ERROR_NETWORK_REQUEST_FAILED")) {
+                                        errorMessage = "Network error. Please check your internet connection.";
+                                    } else {
+                                        errorMessage = "Error: " + exceptionMessage;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Toast.makeText(SignUpActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
     }
