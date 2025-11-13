@@ -1,4 +1,4 @@
-package com.example.movieticketapp.Activity.Notification;
+package com.example.movieticketapp.Notification;
 
 import android.app.Activity;
 import android.content.Context;
